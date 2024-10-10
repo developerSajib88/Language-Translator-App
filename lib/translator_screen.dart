@@ -87,8 +87,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                           setState(() {});
                         }
                       ),
-                  
-                  
+                      
                       const Icon(
                         Icons.arrow_forward
                       ),
