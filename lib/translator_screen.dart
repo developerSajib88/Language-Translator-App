@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:language_translator/language_model.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:translator/translator.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 
 class TranslatorScreen extends StatefulWidget {
@@ -14,6 +15,8 @@ class TranslatorScreen extends StatefulWidget {
 }
 
 class _TranslatorScreenState extends State<TranslatorScreen> {
+  
+  bool startVoiceToText = false;
   TextEditingController inputTextController = TextEditingController();
   TextEditingController outputTextController = TextEditingController();
 
@@ -48,21 +51,35 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
 
 
   Future<void> speechToText()async{
+
+    startVoiceToText = !startVoiceToText;
+    setState(() {});
+
     SpeechToText speech = SpeechToText();
-    bool available = await speech.initialize();
-    if ( available ) {
-        speech.listen( onResult: (value){
-          inputTextController.text = value.recognizedWords;
-          setState(() {});
-        });
+    if(startVoiceToText){
+      bool available = await speech.initialize();
+      if ( available ) {
+          speech.listen( 
+            // ignore: deprecated_member_use
+            onResult: (value){
+            inputTextController.text = value.recognizedWords;
+            setState(() {});
+          });
+      }
+      else {
+          print("The user has denied the use of speech recognition.");
+      }
+    }else{
+        // some time later...
+        speech.stop();
     }
-    else {
-        print("The user has denied the use of speech recognition.");
-    }
-    // some time later...
-    //speech.stop();
   }
 
+  Future textToSpeak() async{
+      FlutterTts flutterTts = FlutterTts();
+      var result = await flutterTts.speak(outputTextController.text);
+      //if (result == 1) setState(() => ttsState = TtsState.playing);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,9 +179,12 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                     child: IconButton(
                         highlightColor: Colors.blue,
                         onPressed: () {
-                          speechToText();
+                            speechToText();
                         },
-                        icon: const Icon(Icons.keyboard_voice_rounded)),
+                        icon: Icon(
+                          Icons.keyboard_voice_rounded,
+                          color: startVoiceToText ? Colors.red : null,
+                        )),
                   ),
                 ],
               ),
@@ -238,7 +258,9 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                     backgroundColor: Colors.white,
                     child: IconButton(
                         highlightColor: Colors.blue,
-                        onPressed: () {},
+                        onPressed: () {
+                          textToSpeak();
+                        },
                         icon: const Icon(Icons.volume_up)),
                   ),
                 ],
