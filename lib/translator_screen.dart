@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:language_translator/language_model.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:translator/translator.dart';
+
 
 class TranslatorScreen extends StatefulWidget {
   const TranslatorScreen({super.key});
@@ -42,6 +45,25 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
       setState(() {});
     });
   }
+
+
+  Future<void> speechToText()async{
+    SpeechToText speech = SpeechToText();
+    bool available = await speech.initialize();
+    if ( available ) {
+        speech.listen( onResult: (value){
+          inputTextController.text = value.recognizedWords;
+          print(value.recognizedWords);
+          setState(() {});
+        });
+    }
+    else {
+        print("The user has denied the use of speech recognition.");
+    }
+    // some time later...
+    //speech.stop();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +162,9 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                     backgroundColor: Colors.white,
                     child: IconButton(
                         highlightColor: Colors.blue,
-                        onPressed: () {},
+                        onPressed: () {
+                          speechToText();
+                        },
                         icon: const Icon(Icons.keyboard_voice_rounded)),
                   ),
                 ],
