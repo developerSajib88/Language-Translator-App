@@ -53,7 +53,6 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
     if ( available ) {
         speech.listen( onResult: (value){
           inputTextController.text = value.recognizedWords;
-          print(value.recognizedWords);
           setState(() {});
         });
     }
