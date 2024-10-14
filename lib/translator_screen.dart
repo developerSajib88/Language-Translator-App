@@ -69,6 +69,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       DropdownButton<String>(
+<<<<<<< HEAD
                           value: fromLanguage,
                           padding: EdgeInsets.zero,
                           underline: Container(),
@@ -83,6 +84,28 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                             setState(() {});
                           }),
                       const Icon(Icons.arrow_forward),
+=======
+                        value: fromLanguage,
+                        padding: EdgeInsets.zero,
+                        underline: Container(),
+                        items: languages.map(
+                          (e)=> DropdownMenuItem<String>(
+                            value: e.code,
+                            child: Text(e.name),
+                          )
+                        ).toList(),
+                        onChanged: (value){
+                          fromLanguage = value!;
+                          setState(() {});
+                        }
+                      ),
+                      
+                      const Icon(
+                        Icons.arrow_forward
+                      ),
+                  
+                  
+>>>>>>> 659f58207bf2f08b1cc4b01bfc8732a8fabe1e44
                       DropdownButton<String>(
                           value: toLanguage,
                           padding: EdgeInsets.zero,
