@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:language_translator/language_model.dart';
 import 'package:translator/translator.dart';
 
@@ -10,14 +11,13 @@ class TranslatorScreen extends StatefulWidget {
 }
 
 class _TranslatorScreenState extends State<TranslatorScreen> {
-  
   TextEditingController inputTextController = TextEditingController();
   TextEditingController outputTextController = TextEditingController();
 
   String fromLanguage = "en";
   String toLanguage = "bn";
 
- List<Language> languages = [
+  List<Language> languages = [
     Language("English", "en"),
     Language("Bengali", "bn"),
     Language("Spanish", "es"),
@@ -34,15 +34,13 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
     Language("Turkish", "tr"),
   ];
 
-  Future<void> translate()async{
-    await GoogleTranslator().translate(
-      inputTextController.text,
-      from: fromLanguage,
-      to: toLanguage
-    ).then((s) {
+  Future<void> translate() async {
+    await GoogleTranslator()
+        .translate(inputTextController.text, from: fromLanguage, to: toLanguage)
+        .then((s) {
       outputTextController.text = s.text;
       setState(() {});
-    }); 
+    });
   }
 
   @override
@@ -64,15 +62,29 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             
               Card(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                  
                       DropdownButton<String>(
+<<<<<<< HEAD
+                          value: fromLanguage,
+                          padding: EdgeInsets.zero,
+                          underline: Container(),
+                          items: languages
+                              .map((e) => DropdownMenuItem<String>(
+                                    value: e.code,
+                                    child: Text(e.name),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            fromLanguage = value!;
+                            setState(() {});
+                          }),
+                      const Icon(Icons.arrow_forward),
+=======
                         value: fromLanguage,
                         padding: EdgeInsets.zero,
                         underline: Container(),
@@ -93,148 +105,200 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                       ),
                   
                   
+>>>>>>> 659f58207bf2f08b1cc4b01bfc8732a8fabe1e44
                       DropdownButton<String>(
-                        value: toLanguage,
-                        padding: EdgeInsets.zero,
-                        underline: Container(),
-                        items: languages.map(
-                          (e)=> DropdownMenuItem<String>(
-                            value: e.code,
-                            child: Text(e.name),
-                          )
-                        ).toList(),
-                        onChanged: (value){
-                          toLanguage = value!;
-                          setState(() {});
-                        }
-                      ),
-                  
-                  
+                          value: toLanguage,
+                          padding: EdgeInsets.zero,
+                          underline: Container(),
+                          items: languages
+                              .map((e) => DropdownMenuItem<String>(
+                                    value: e.code,
+                                    child: Text(e.name),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            toLanguage = value!;
+                            setState(() {});
+                          }),
                     ],
                   ),
                 ),
-              ),  
-
-
+              ),
               const SizedBox(
                 height: 10,
               ),
 
-              Text(
-                languages.singleWhere((language) => language.code == fromLanguage).name,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 15
-                ),
+
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    languages
+                        .singleWhere(
+                            (language) => language.code == fromLanguage)
+                        .name,
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                  const Spacer(),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                        highlightColor: Colors.blue,
+                        onPressed: () async {
+                          ClipboardData? clipboardData =
+                              await Clipboard.getData(Clipboard.kTextPlain);
+                          inputTextController.text =
+                              clipboardData?.text ?? "No Text";
+
+                          translate();    
+                        },
+                        icon: const Icon(Icons.paste_rounded)),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                        highlightColor: Colors.blue,
+                        onPressed: () {},
+                        icon: const Icon(Icons.keyboard_voice_rounded)),
+                  ),
+                ],
               ),
-          
+
+
               const SizedBox(
                 height: 5,
               ),
-          
+
+
+
+
               TextFormField(
                 controller: inputTextController,
                 minLines: 5,
                 maxLines: 10,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
-                  hintText: "Type your text here...",
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                      width: 2,
-                    )
-                  ),
-          
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                      width: 2,
-                    )
-                  ),
-          
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                      width: 2,
-                    )
-                  )
-          
-                ),
+                    hintText: "Type your text here...",
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Colors.blue,
+                          width: 2,
+                        )),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Colors.blue,
+                          width: 2,
+                        )),
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Colors.red,
+                          width: 2,
+                        ))),
               ),
-            
+
+
+
               const SizedBox(
                 height: 10,
               ),
-          
-              Text(
-                languages.singleWhere((language) => language.code == toLanguage).name,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 15
-                ),
+
+
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    languages
+                        .singleWhere((language) => language.code == toLanguage)
+                        .name,
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                  const Spacer(),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                        highlightColor: Colors.blue,
+                        onPressed: () {
+                          Clipboard.setData(
+                              ClipboardData(text: outputTextController.text));
+                        },
+                        icon: const Icon(Icons.copy)),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                        highlightColor: Colors.blue,
+                        onPressed: () {},
+                        icon: const Icon(Icons.volume_up)),
+                  ),
+                ],
               ),
-          
+
+
               const SizedBox(
                 height: 5,
               ),
-          
+
+
               TextFormField(
                 controller: outputTextController,
-                minLines: 10,
+                minLines: 5,
                 maxLines: 10,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
-                  hintText: "Result text...",
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                      width: 2,
-                    )
-                  ),
-          
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                      width: 2,
-                    )
-                  ),
-          
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                      width: 2,
-                    )
-                  )
-          
-                ),
+                    hintText: "Result text...",
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Colors.blue,
+                          width: 2,
+                        )),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Colors.blue,
+                          width: 2,
+                        )),
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Colors.red,
+                          width: 2,
+                        ))),
               ),
-          
-          
-              const SizedBox(height: 20,),
+              
+              const SizedBox(
+                height: 20,
+              ),
               
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: ()=> translate(),
+                  onPressed: () => translate(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all( Radius.circular(10))
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
-                  child: const Text("Translate",style: TextStyle(color: Colors.white),),
+                  child: const Text(
+                    "Translate",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               )
-              
-          
+
+
             ],
           ),
         ),
@@ -242,4 +306,3 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
     );
   }
 }
-
