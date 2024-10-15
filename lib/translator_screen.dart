@@ -121,7 +121,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                             fromLanguage = value!;
                             setState(() {});
                           }),
-                      const Icon(Icons.arrow_forward),
+                      const Icon(Icons.swap_horiz_rounded),
                       DropdownButton<String>(
                           value: toLanguage,
                           padding: EdgeInsets.zero,
